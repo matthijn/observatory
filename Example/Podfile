@@ -1,0 +1,8 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+
+target 'Observatory', :exclusive => true do
+  pod "Observatory", :path => "../"
+
+  
+end
