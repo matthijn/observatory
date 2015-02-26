@@ -46,7 +46,7 @@ Lets say you run a pet store and we want to check the food supply of some animal
 
 So, what happened here? Observatory determines what the name is of the class and property you are observing and will generate a unique selector based of that.
 
-So if we have a model `PETRabbit` with a property `carrots` the following selector will be called on the observer when the property carrots changes:
+So if we have a model `PETRabbit` with a property `carrots` the following selector will be called on the observer when the property `carrots` changes:
 
 ```
 - (void)rabbit:(PETRabbit *)valueChangedForCarrots:(id)carrots;
@@ -73,22 +73,22 @@ and run `pod install`
 
 For the observer the following methods are available
 
-Observe a given OBYModel on all it’s keys
+Observe a given OBYModel on all it’s keys:
 ```
 - (void)observeModel:(OBYModel*)model;
 ```
 
-Add observation to multiple OBYModels at once
+Add observation to multiple OBYModels at once:
 ```
 - (void)observeModels:(NSArray*)models;
 ```
 
-Stop observation on all OBYModels
+Stop observation on all OBYModels:
 ```
 - (void)removeAsObserverForAllModels;
 ```
 
-Remove the observation for a given OBYModel
+Remove the observation for a given OBYModel:
 ```
 - (void)removeAsObserverForModel:(OBYModel *)model;
 ```
@@ -105,7 +105,7 @@ to the objects who will act as the observer. This will make the API listed above
 
 The objects you want to observe should extend `OBYModel`.
 
-*Final note: * Your classes should have a [three letter prefix](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Conventions/Conventions.html) to determine the correct class name. 
+**Final note:** Your classes should have a [three letter prefix](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Conventions/Conventions.html) to determine the correct class name. 
 
 ## More
 
@@ -129,5 +129,4 @@ Finally if this selector has not been implemented either it will fall back to th
 
 ## Thanks
 
-Finally, thanks for [Nils Wiersema](https://github.com/nilswiersema) on working on the original project with me where this idea was conceived on.
-
+Finally, thanks to [Nils Wiersema](https://github.com/nilswiersema) for working on the original project where this idea first saw the light.
