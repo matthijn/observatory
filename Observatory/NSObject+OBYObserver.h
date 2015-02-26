@@ -17,6 +17,9 @@
 // Observe a given OBYModel
 - (void)observeModel:(OBYModel*)model;
 
+// Observe a given model only on specific keys
+- (void)observeModel:(OBYModel*)model onKeys:(NSArray*)keys;
+
 // Observe multiple OBYModels at once
 - (void)observeModels:(NSArray*)models;
 
