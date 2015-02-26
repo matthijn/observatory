@@ -6,7 +6,7 @@ We all love the Objective-C KVO system. However it is [quite tedious](http://nsh
 
 ## Example
 
-Lets say we have run a pet store and we wan’t to check the food supply of some animals. The `PETSquirrel` and `PETRabbit`. With observatory we can do it with just a few lines of code:
+Lets say we have run a pet store and we want to check the food supply of some animals. The `PETSquirrel` and `PETRabbit`. With observatory we can do it with just a few lines of code:
 
 ```
 
@@ -44,7 +44,7 @@ Lets say we have run a pet store and we wan’t to check the food supply of some
 @end
 ```
 
-So, what happened here? Observatory determines what the name of the class is you are observing and the name of the property and will generate a unique selector based of that.
+So, what happened here? Observatory determines what the name of the class and property of that class is you are observing and will generate a unique selector based of that.
 
 So if we have a model `PETRabbit` with a property `carrots` the following selector will be called on the observer when the property carrots changes:
 
@@ -73,25 +73,25 @@ and run `pod install`
 
 For the observer the following methods are available
 
+Observe a given OBYModel on all it’s keys
 ```
 - (void)observeModel:(OBYModel*)model;
 ```
-Observe a given OBYModel on all it’s keys
 
+Add observation to multiple OBYModels at once
 ```
 - (void)observeModels:(NSArray*)models;
 ```
-Add observation to multiple OBYModels at once
 
+Stop observation on all OBYModels
 ```
 - (void)removeAsObserverForAllModels;
 ```
-Stop observation on all OBYModels
 
+Remove the observation for a given OBYModel
 ```
 - (void)removeAsObserverForModel:(OBYModel *)model;
 ```
-Remove the observation for a given OBYModel
 
 ## Usage
 
@@ -105,6 +105,25 @@ to the objects who will act as the observer. This will make the API listed above
 
 The objects you want to observe should extend `OBYModel`.
 
+*Final note: * Your classes should have a [three letter prefix](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Conventions/Conventions.html) to determine the correct class name. 
 
+## More
 
+Observatory “falls back” to more generic selectors if a given selector is not implemented in your observer. If for example you have not implemented the earlier `rabbit: valueChangedForCarrots` selector it will try the following more generic selector:
+
+```
+- (void)rabbit:(PETRabbit *) valueChangedForKey(NSString *)key;
+```
+
+Where the structure is:
+
+```
+- (void)[model]:(Class *) valueChangedForKey(NSString *)key;
+```
+
+Finally if this selector has not been implemented either it will fall back to the most generic selector:
+
+```
+- (void)model:(OBYModel*)model valueChangedForKey:(NSString*)key;
+```
 
