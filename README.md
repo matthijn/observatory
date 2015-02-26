@@ -6,7 +6,7 @@ We all love the Objective-C KVO system. However it is [quite tedious](http://nsh
 
 ## Example
 
-Lets say we have run a pet store and we want to check the food supply of some animals. The `PETSquirrel` and `PETRabbit`. With observatory we can do it with just a few lines of code:
+Lets say you run a pet store and we want to check the food supply of some animals. The `PETSquirrel` and `PETRabbit`. With observatory we can do it with just a few lines of code:
 
 ```
 
@@ -44,7 +44,7 @@ Lets say we have run a pet store and we want to check the food supply of some an
 @end
 ```
 
-So, what happened here? Observatory determines what the name of the class and property of that class is you are observing and will generate a unique selector based of that.
+So, what happened here? Observatory determines what the name is of the class and property you are observing and will generate a unique selector based of that.
 
 So if we have a model `PETRabbit` with a property `carrots` the following selector will be called on the observer when the property carrots changes:
 
@@ -126,4 +126,8 @@ Finally if this selector has not been implemented either it will fall back to th
 ```
 - (void)model:(OBYModel*)model valueChangedForKey:(NSString*)key;
 ```
+
+## Thanks
+
+Finally, thanks for [Nils Wiersema](https://github.com/nilswiersema) on working on the original project with me where this idea was conceived on.
 
