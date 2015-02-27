@@ -36,7 +36,7 @@ Lets say you run a pet store and we want to check the food supply of some animal
 }
 
 // Called when the <nuts> property is changed on the <PETSquirrel> instance
-- (void)squirrel:(PETSquirrel *)squirrel valueChangedForNuts(NSNumber *)nuts
+- (void)squirrel:(PETSquirrel *)squirrel valueChangedForNuts:(NSNumber *)nuts
 {
     NSLog(@"Nom, I now have %d nuts!", [nuts intValue]);
 }
