@@ -6,8 +6,16 @@
 //  Copyright (c) 2013 Matthijn Dijkstra. All rights reserved.
 //
 
-// the code warns about a possible leak by generating selectors from strings. However will not leak because the method for the generated selector will not return anything. More details can be found here:  http://stackoverflow.com/questions/7017281/performselector-may-cause-a-leak-because-its-selector-is-unknown
-// When I find the time I will build a better solution
+// The compiler warns about a possible leak by generating selectors from strings. However will not leak because the method for the generated selector will not return anything. More details can be found here:  http://stackoverflow.com/questions/7017281/performselector-may-cause-a-leak-because-its-selector-is-unknown
+// When I find the time I will build a better solution, for now suppressing the warning
+
+#define SuppressPerformSelectorLeakWarning(Stuff) \
+do { \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
+Stuff; \
+_Pragma("clang diagnostic pop") \
+} while (0)
 
 #import <objc/runtime.h>
 
@@ -129,7 +137,9 @@
         {
             // It does! Get the correct value from the observed object and perform the selector on self
             id value = [object valueForKey:keyPath];
-            [self performSelector:modelAndKeySpecificSelector withObject:object withObject:value];
+            SuppressPerformSelectorLeakWarning(
+                                               [self performSelector:modelAndKeySpecificSelector withObject:object withObject:value];
+                                               );
         }
         // This class does not respond to the most specific selector, perhaps a more generic selector has been chosen?
         else
@@ -141,7 +151,9 @@
             // Determine if it responds to the model specific selector
             if([self respondsToSelector:modelSpecificSelector ])
             {
-                [self performSelector:modelSpecificSelector withObject:object withObject:keyPath];
+                SuppressPerformSelectorLeakWarning(
+                                                   [self performSelector:modelSpecificSelector withObject:object withObject:keyPath];
+                                                   );
             }
             // Nothing there, revert to the good ol' default
             else
