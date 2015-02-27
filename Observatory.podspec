@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.summary          = "Observatory is an improvement on the standard Objective-C KVO system."
   s.homepage         = "https://github.com/Matthijn/Observatory"
   s.license          = 'MIT'
-  s.author           = { "Matthijn Dijkstra" => "matthijndijkstra@gmail.com" }
+  s.author           = { "Matthijn Dijkstra" => "opensource@indev.nl" }
   s.source           = { :git => "https://github.com/Matthijn/Observatory.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/matthijn_indev'
   s.requires_arc = true
