@@ -38,7 +38,7 @@ _Pragma("clang diagnostic pop") \
 // Observe an OBYModel on all its keys
 - (void)observeModel:(OBYModel*)model
 {
-	[self observeModel:model onKeys:nil];
+    [self observeModel:model onKeys:nil];
 }
 
 // Observe an OBYModel on the given array of keys
@@ -50,13 +50,13 @@ _Pragma("clang diagnostic pop") \
         self.observedModels = [NSMutableDictionary dictionary];
     }
     
-	// Determine alias (can be overridden for custom aliasing per model instance)
-	NSString* alias = [self aliasForModel:model];
-	
-	// If the model has not been registered to observe add it
-	if(!self.observedModels[alias])
-	{
-		self.observedModels[alias] = model;
+    // Determine alias (can be overridden for custom aliasing per model instance)
+    NSString* alias = [self aliasForModel:model];
+    
+    // If the model has not been registered to observe add it
+    if(!self.observedModels[alias])
+    {
+        self.observedModels[alias] = model;
         
         // Call the relevant models both on the initial fase (so you can hook up it directly) and when the value changes
         NSKeyValueObservingOptions options = (NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew);
@@ -75,7 +75,7 @@ _Pragma("clang diagnostic pop") \
         {
             [model addObserverForAllProperties:self options:options context:nil];
         }
-	}
+    }
 }
 
 // Add observation to multiple models at once
@@ -102,11 +102,11 @@ _Pragma("clang diagnostic pop") \
 // Remove all observations of this class on any model
 - (void)removeAsObserverForAllModels
 {
-	for(OBYModel* model in [self.observedModels allValues])
-	{
-		[model removeObserverForAllProperties:self];
-	}
-	[((NSMutableDictionary*)self.observedModels) removeAllObjects];
+    for(OBYModel* model in [self.observedModels allValues])
+    {
+        [model removeObserverForAllProperties:self];
+    }
+    [((NSMutableDictionary*)self.observedModels) removeAllObjects];
 }
 
 #pragma mark KVO Events

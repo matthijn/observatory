@@ -40,7 +40,7 @@
 {
     // No need to calculate the properties multiple times
     static NSMutableArray *allProperties;
-
+    
     if(allProperties == nil)
     {
         allProperties = [NSMutableArray new];
@@ -60,7 +60,7 @@
         }
         
     }
-
+    
     return allProperties;
 }
 
