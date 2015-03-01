@@ -24,61 +24,79 @@ _Pragma("clang diagnostic pop") \
 
 @interface NSObject()
 
-// Holds the reference to all observed models. So make sure to call removeAsObserverForModel if you are done with it
-
-// Categories cannot add properties to a class by default under the pragma mark other the code is placed which makes this possible
+/**
+ *  Holds the reference to all observed models. So make sure to call removeAsObserverForModel if you are done with it. (Using some lower level code to make adding properties possible with categories, since this is not supported by default)
+ */
 @property (nonatomic, strong) NSMutableDictionary *observedModels;
 
 @end
 
+/**
+ *  This Category adds helper methods to the NSObject for observing models
+ */
 @implementation NSObject (OBYObserver)
 
 #pragma mark Add models to observe
 
-// Observe an OBYModel on all its keys
-- (void)observeModel:(OBYModel*)model
+/**
+ *  Observe a given OBYModel
+ *
+ *  @param model The model you want to observe
+ */
+- (void)observeModel:(OBYModel*)model;
 {
     [self observeModel:model onKeys:nil];
 }
 
-// Observe an OBYModel on the given array of keys
-- (void)observeModel:(OBYModel*)model onKeys:(NSArray*)keys
+/**
+ *  Observe a given model only on specific keys
+ *
+ *  @param model The model you want to observe
+ *  @param keys  An array containing keypaths to the properties on the model to observe
+ *  @param tag The unique identifier for this instance of this model
+ */
+- (void)observeModel:(OBYModel*)model onKeys:(NSArray*)keys;
 {
     // Make sure we have a place to store the referenced models in
     if(!self.observedModels)
     {
         self.observedModels = [NSMutableDictionary dictionary];
     }
+
+    // Determine alias
+    NSString* alias = model.observatoryAlias;
     
-    // Determine alias (can be overridden for custom aliasing per model instance)
-    NSString* alias = [self aliasForModel:model];
+    // Make sure it is unique
+    NSAssert(!self.observedModels[alias], @"Already observing a model with alias: %@", alias);
     
-    // If the model has not been registered to observe add it
-    if(!self.observedModels[alias])
+    // If we get here it is unique, so we can add it
+    self.observedModels[alias] = model;
+    
+    // Call the relevant models both on the initial fase (so you can hook up it directly) and when the value changes
+    NSKeyValueObservingOptions options = (NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew);
+    
+    // If keys have been passed only observe those keys
+    if(keys)
     {
-        self.observedModels[alias] = model;
-        
-        // Call the relevant models both on the initial fase (so you can hook up it directly) and when the value changes
-        NSKeyValueObservingOptions options = (NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew);
-        
-        // If keys have been passed only observe those keys
-        if(keys)
+        // Iterage over all keys and add self as the observer for those keys
+        for(id key in keys)
         {
-            // Iterage over all keys and add self as the observer for those keys
-            for(id key in keys)
-            {
-                [model addObserver:self forKeyPath:key options:options context:nil];
-            }
-        }
-        // No keys have been passed, listening for all values
-        else
-        {
-            [model addObserverForAllProperties:self options:options context:nil];
+            [model addObserver:self forKeyPath:key options:options context:nil];
         }
     }
+    // No keys have been passed, listening for all values
+    else
+    {
+        [model addObserverForAllProperties:self options:options context:nil];
+    }
+
 }
 
-// Add observation to multiple models at once
+/**
+ *  Observe multiple OBYModels at once on all keys
+ *
+ *  @param models An array containing one or more OBYModel instances
+ */
 - (void)observeModels:(NSArray*)models
 {
     for(OBYModel *model in models)
@@ -89,17 +107,22 @@ _Pragma("clang diagnostic pop") \
 
 #pragma mark Remove models from observation
 
-// Remove the observation on the given model
+/**
+ *  Removes this instance as an observer on the given OBYModel instance
+ *
+ *  @param model The model you want to stop observing
+ */
 - (void)removeAsObserverForModel:(OBYModel *)model
 {
-    NSString *alias = [self aliasForModel:model];
-    if([self.observedModels valueForKey:alias])
+    if([self.observedModels valueForKey:model.observatoryAlias])
     {
         [model removeObserverForAllProperties:self];
     }
 }
 
-// Remove all observations of this class on any model
+/**
+ *  Removes this instance as an obverver on all current observing OBYModels
+ */
 - (void)removeAsObserverForAllModels
 {
     for(OBYModel* model in [self.observedModels allValues])
@@ -111,7 +134,14 @@ _Pragma("clang diagnostic pop") \
 
 #pragma mark KVO Events
 
-// This is where the magic happens. By default the Objective-C KVO system calls this when changes in properties
+/**
+ *  This is where the magic happens. By default the Objective-C KVO system calls this when it detects changes in properties. This forwards it to the correct selector
+ *
+ *  @param keyPath
+ *  @param object
+ *  @param change
+ *  @param context
+ */
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context
 {
     
@@ -165,29 +195,36 @@ _Pragma("clang diagnostic pop") \
     }
 }
 
-// Used as a fallback when no more specific method signature has been declared for a given KVO event
+/**
+ *  Called when the values of the given model change and there is no more specific method declared, for that see online documentation ( https://github.com/Matthijn/Observatory ) for the correct naming conventions
+ *
+ *  @param model The model instance which has the changed property value
+ *  @param key   The keypath to the property that changed value
+ */
 - (void)model:(OBYModel*)model valueChangedForKey:(NSString*)key { }
 
 # pragma mark Other
 
 // This is a category, which cannot add properties to a class by default. This low level runtime code makes it possible.
 
-// Setting the observed models property
+/**
+ *  Setting the observed models property
+ *
+ *  @param models A dictionary that will contain the models
+ */
 - (void)setObservedModels:(NSDictionary *)models
 {
     objc_setAssociatedObject(self, @selector(observedModels), models, OBJC_ASSOCIATION_RETAIN);
 }
 
-// And retrieving
+/**
+ *  And retrieving the dictionary that holds the observed models
+ *
+ *  @return
+ */
 - (NSMutableDictionary *)observedModels
 {
     return objc_getAssociatedObject(self, @selector(observedModels));
-}
-
-// Used to determine a key to use to reference the model in on the dictionairy
-- (NSString*)aliasForModel:(OBYModel*)model
-{
-    return NSStringFromClass([model class]);
 }
 
 @end

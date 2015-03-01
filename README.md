@@ -71,24 +71,26 @@ and run `pod install`
 
 ## API
 
+### NSObject+OBYObserver
+
 For the observer the following methods are available
 
-Observe a given OBYModel on all it’s keys:
+Observe a given `OBYModel` on all it’s keys:
 ```
 - (void)observeModel:(OBYModel*)model;
 ```
 
-Add observation to multiple OBYModels at once:
+Add observation to multiple `OBYModels` at once:
 ```
 - (void)observeModels:(NSArray*)models;
 ```
 
-Stop observation on all OBYModels:
+Stop observation on all `OBYModels`:
 ```
 - (void)removeAsObserverForAllModels;
 ```
 
-Remove the observation for a given OBYModel:
+Remove the observation for a given `OBYModel`:
 ```
 - (void)removeAsObserverForModel:(OBYModel *)model;
 ```

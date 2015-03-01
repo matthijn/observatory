@@ -11,9 +11,18 @@
 
 #import <objc/runtime.h>
 
+/**
+ *  Your models should extend this class if you want to observe them with Observatory
+ */
 @implementation OBYModel
 
-// Adds the given observer as an observer for all keys in this object
+/**
+ *  Helper method to observe all properties on this model via the Objective C KVO system
+ *
+ *  @param observer
+ *  @param options
+ *  @param context
+ */
 - (void)addObserverForAllProperties:(NSObject*)observer options:(NSKeyValueObservingOptions)options context:(void*)context
 {
     // Iterate over all properties
@@ -24,7 +33,11 @@
     }
 }
 
-// Remove the observing of the observer on all properties
+/**
+ *  Removes the given observer as an KVO observer for all properties on this model
+ *
+ *  @param observer
+ */
 - (void)removeObserverForAllProperties:(NSObject*)observer
 {
     // Iterate over all properties
@@ -35,7 +48,11 @@
     }
 }
 
-// Returns an array with string representations of the keys of all properties of this object
+/**
+ *  Returns an array with all the keypaths to the properties of this instance
+ *
+ *  @return Array with keypaths
+ */
 - (NSArray *)allProperties
 {
     // No need to calculate the properties multiple times
@@ -64,7 +81,13 @@
     return allProperties;
 }
 
-// Returns a shortened name for this model. Observatory expects classes to have a prefix and will strip that prefix ( Converts STKFooBarName to fooBarName )
+# pragma mark Other
+
+/**
+ *  Returns the class name where the prefix is stripped of and the first letter is lowercased
+ *
+ *  @return The short name
+ */
 - (NSString *)shortName
 {
     // Strip the prefix
@@ -72,6 +95,16 @@
     
     // And correct the casing
     return [name stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[name substringToIndex:1] lowercaseString]];
+}
+
+/**
+ *  Returns a unique name for this model and instance so Observatory can keep track of it
+ *
+ *  @return The model instance alias
+ */
+- (NSString *)observatoryAlias
+{
+    return [NSString stringWithFormat:@"%@-%p", NSStringFromClass([self class]), self];
 }
 
 @end
