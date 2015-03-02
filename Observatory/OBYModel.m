@@ -98,13 +98,14 @@
 }
 
 /**
- *  Returns a unique name for this model and instance so Observatory can keep track of it
+ *  Returns an identifier for this model and instance so Observatory can keep track of it
  *
  *  @return The model instance alias
  */
-- (NSString *)observatoryAlias
+- (unsigned long)identifier
 {
-    return [NSString stringWithFormat:@"%@-%p", NSStringFromClass([self class]), self];
+    // Using the memory address as long for identification
+    return (uintptr_t) self;
 }
 
 @end

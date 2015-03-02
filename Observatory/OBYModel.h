@@ -15,9 +15,9 @@
 @interface OBYModel : NSObject
 
 /**
- *  Holds a unique name for this model and instance so Observatory can keep track of it
+ *  A unique identifier for this instance so Observatory can keep track of it
  */
-@property (nonatomic, readonly) NSString *observatoryAlias;
+@property (nonatomic, readonly) unsigned long identifier;
 
 # pragma mark Helpers to more easily manage KVO on this model
 

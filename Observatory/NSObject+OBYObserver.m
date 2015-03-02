@@ -62,15 +62,12 @@ _Pragma("clang diagnostic pop") \
     {
         self.observedModels = [NSMutableDictionary dictionary];
     }
-
-    // Determine alias
-    NSString* alias = model.observatoryAlias;
     
     // Make sure it is unique
-    NSAssert(!self.observedModels[alias], @"Already observing a model with alias: %@", alias);
+    NSAssert(!self.observedModels[@(model.identifier)], @"Already observing a model with identifier: %lu", model.identifier);
     
     // If we get here it is unique, so we can add it
-    self.observedModels[alias] = model;
+    self.observedModels[@(model.identifier)] = model;
     
     // Call the relevant models both on the initial fase (so you can hook up it directly) and when the value changes
     NSKeyValueObservingOptions options = (NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew);
@@ -114,9 +111,13 @@ _Pragma("clang diagnostic pop") \
  */
 - (void)removeAsObserverForModel:(OBYModel *)model
 {
-    if([self.observedModels valueForKey:model.observatoryAlias])
+    if(self.observedModels[@(model.identifier)])
     {
+        // Stop observing the model
         [model removeObserverForAllProperties:self];
+        
+        // Remove it from the dictionary
+        [self.observedModels removeObjectForKey:@(model.identifier)];
     }
 }
 
