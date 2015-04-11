@@ -55,7 +55,7 @@ So if we have a model `PETRabbit` with a property `carrots` the following select
 The pattern here is:
 
 ```
-- (void)[className]:(Class *)valueChangeFor[value]:(id)value;
+- (void)[className]:(Class *)valueChangedFor[value]:(id)value;
 ```
 
 Much easier, is it not?
