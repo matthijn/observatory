@@ -131,4 +131,4 @@ Finally if this selector has not been implemented either it will fall back to th
 
 ## Thanks
 
-Finally, thanks to [Nils Wiersema](https://github.com/nilswiersema) for working on the original project with me where this idea first saw the light.
+Finally, thanks to [Nils Wiersema](https://github.com/nilswiersema) for working on the [original project](https://github.com/nilswiersema/strik) with me where this idea first saw the light.
